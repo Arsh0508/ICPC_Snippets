@@ -3,11 +3,11 @@ using namespace std;
 
 class CentroidDecomp {
 	/**
-	 * Perform centroid decomposition on a graph.
+	 * Perform centroid decomposition of a tree.
 
 	 * Usage: call constructor as CentroidDecomp(n, g)
 	 * 	where n is the no of nodes
-	 * 	and g is the graph, either as a vector of vectors,
+	 * 	and g is the tree, either as a vector of vectors,
 	 * 		or as an array of vectors.
 	 * 
 	 * MAKE SURE that g is at least n + 1 in size 
