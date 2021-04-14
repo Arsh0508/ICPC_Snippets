@@ -99,20 +99,24 @@ vi parent(N, 0);
 vi val(N);
 int n, q;
 
-class SegmentTree
-{
+class SegmentTree {
 	/**
 	 * 	Segment Tree class that supports lazy updates.
 	 * 	Specify the merge operation in the merge() function,
 	 * 	and the lazy propagation in the propagate() function.
-	 * 	Size of the segment tree is taken to be N by default (N being a global constant).
+	 * 
+	 * 	Number of leaf nodes for the segment tree, n, is to be passed into the constructor.
+	 * 	(Size of the seg tree is then 4 * n).
 	 * 	The update() function takes a parameter val, which is assigned to the lazy value
 	 * 	of the seg tree nodes and then propagated.
 	 **/
 
+	using vi = vector<int>;
+
+	int n;
 	vi tree, lazy;
-	int IDENTITY = 0;
-	ll MKB = 2147483647;
+	int IDENTITY = 0; // Identity element of the operation on the segtree.
+	// Example: 0 is identity for addition, INF is identity for min(), etc.
 	inline int left(int v) {
 		return 2 * v;
 	}
@@ -125,16 +129,17 @@ class SegmentTree
 	}
 	inline void propagate(int v, int tl, int tr) {
 		if (lazy[v]) {
-			tree[v] = MKB * (tr - tl + 1) - tree[v];
+			tree[v] += lazy[v];
 		}
 		if (tl != tr) {
-			lazy[left(v)] ^= lazy[v];
-			lazy[right(v)] ^= lazy[v];
+			lazy[left(v)] += lazy[v];
+			lazy[right(v)] += lazy[v];
 		}
 		lazy[v] = 0;
 	}
   public:
-  	SegmentTree() {
+  	SegmentTree(int N=N) {
+		n = N;
   		tree.assign(4 * N, 0);
   		lazy.assign(4 * N, 0);
   	}
@@ -142,7 +147,7 @@ class SegmentTree
 		if (tl == tr) {
 			tree[v] = a[tl];
 		} else {
-			int tm = (tl + tr) / 2;
+			int tm = (tl + tr) >> 1;
 			build(a, left(v), tl, tm);
 			build(a, right(v), tm + 1, tr);
 			tree[v] = merge(tree[left(v)], tree[right(v)]);
@@ -172,13 +177,11 @@ class SegmentTree
 		int tm = (tl + tr) >> 1;
 		update(left(v), tl, tm, ql, qr, val);
 		update(right(v), tm + 1, tr, ql, qr, val);
-
-		tree[v] = tree[left(v)] + tree[right(v)];
+		tree[v] = merge(tree[left(v)], tree[right(v)]);
 	}
 };
 
-class HLD
-{
+class HLD {
 	/**
 	 * 	HLD class. Supports build(), query() and update() operations.
 	 * 	CALL THE initialize() FUNCTION BEFORE DOING ANYTHING ELSE.
@@ -193,8 +196,8 @@ class HLD
 	int cur_pos = 0;
 	SegmentTree T;
   public:
-  	HLD()
-  	{
+  	HLD(int N=N) {
+		T = SegmentTree(N);
   		sub.assign(N, 0);
   		heavy_child.assign(N, 0);
   		head.assign(N, 0);
