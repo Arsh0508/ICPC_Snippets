@@ -1,0 +1,63 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2577
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 class TrieNode \{\
+	public:\
+	unordered_map<char, TrieNode*> child;\
+	int val;\
+	void insert(string word)\{\
+	    // To hold the value of root\
+	    TrieNode* current = root;\
+	\
+	    // To hold letters of the word\
+	    char s;\
+	\
+	    // Traverse through strings in list\
+	    for (int i = 0; i < word.length(); i++) \{\
+	        s = word[i];\
+	\
+	        // If s is not present in the character field of current node\
+	        if (current->child.find(s) == current->child.end()) \{\
+	            // Get new node\
+	            TrieNode* p = new TrieNode();\
+	            // Insert s in character field of current node with reference to node p\
+	            (current->child)[s] = p;\
+	        \}\
+	\
+	        // Go to next node\
+	        current = (current->child)[s];\
+	    \}\
+	\}\
+	\
+	// Function to count the number of words in trie with given prefix\
+	int query(string prefix)\{\
+	\
+	    TrieNode* current = root;\
+	    char s;\
+	\
+	    // Initialize the ans = 0\
+	    int ans = 1;\
+	\
+	    for (int i = 0; i < prefix.size(); i++) \{\
+	        s = prefix[i];\
+	\
+	        // If the complete prefix isnot present in the trie\
+	        if (current->child.find(s) == current->child.end()) \{\
+	\
+	            // Make ans 0 and break out of loop\
+	            ans = 0;\
+	            break;\
+	        \}\
+	\
+	        // Go to next node\
+	        current = (current->child)[s];\
+	    \}\
+	\
+	    return ans;\
+	\}\
+\};\
+}
