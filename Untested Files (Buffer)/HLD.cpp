@@ -1,40 +1,7 @@
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
 
 #define FASTIO
-// #define endl "\n"  // Since endl forces a buffer flush which slows down large I/O operations.
 #define int long long
-#define ff first
-#define ss second
-#define pb push_back
-#define input(c, n) for (int i = 0; i < n; ++i) cin >> c[i];
-#define exit_message(s) return 0 * printf(s)
-#define show_all(c) for (auto i: c) cout << i << " "; cout << "\n";
-#define display(c, a, n) cout << "Displaying array \"" << #c << "\" : \n"; for (int (i) = (a); (i) < (n); ++(i)) cout << (c)[(i)] << " "; cout << "\n";
-#define forl(i, a, n) for (int i = (a); (i) < (n); ++(i))
-#define dugbe(k) cerr << "-\t> " << #k << " = " << k << "\n";
-#define dugbev(arr, idx) cerr << "-\t " << #arr << "[" << idx << "] : " << arr[idx] << "\n";
-#define debug(args...) { string _debug_list = #args; replace(_debug_list.begin(), _debug_list.end(), ',', ' '); stringstream _debug_stream(_debug_list); istream_iterator<string> __it(_debug_stream); debug_func(__it, args); }
-
-/*
- * What follows is a magical ordered set data structure.
- * Supports the following functions:
- * find_by_order(int k) - returns k'th smallest element (0-indexed)
- * order_of_key(int k) - returns number of elements strictly smaller than k.
-using namespace __gnu_pbds;
-#define ordered_set tree <ll, null_type, greater_equal <ll>, rb_tree_tag, tree_order_statistics_node_update>
-*/
-
-/* TIPS FOR DEBUGGING
- * Check if values are not overflowing (use long long where required)
- * Check if ranges are inclusive or not.
- * Check properly if greedy will work or not before using it.
- * Check EDGE CASES!! Seriously, even in 2B, saving 8 points by being
- * 2 minutes faster will bite you in the ass if you don't make sure
- * it works on edge cases.
- * Keep adding to this list.
-*/
 
 using namespace std;
 typedef long long ll;
@@ -45,59 +12,7 @@ typedef vector<ll> vll;
 typedef vector<pr> vpr;
 typedef vector<vi> vvi;
 
-ifstream in("input.txt");
-const ll mod = 1e9 + 7;
 const long double eps = 1e-7;
-// const long double M_PI = 3.141592653589793238462643383279;
-
-void debug_func(istream_iterator<string> _it)
-{
-	cerr << "\n";
-}
-
-template <typename T, typename... Args>
-void debug_func(istream_iterator<string> _it, T x, Args... args)
-{
-	cerr << "[ " << *_it << " : " << x << " ]";
-	cerr << " , ";
-	debug_func(++_it, args...);
-}
-
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-
-long long true_rand(long long n)
-{
-	// Returns a random number between 0 and n - 1 inclusive using mt19937.
-	uniform_int_distribution<long long> uid(0, n - 1);
-	return uid(rng);
-}
-
-ll mod_pow(ll a, ll b)
-{
-	if (b == 0)
-		return 1LL;
-
-	ll res = mod_pow(a, b >> 1);
-	res = (res * res) % mod;
-	if (b & 1LL)
-		res = (res * a) % mod;
-	
-	return res;
-}
-
-ll inverse(ll a)
-{
-	return mod_pow(a, mod - 2);
-}
-
-const int N = 1e5 + 5;
-const ll INF = 1e9 + 5, LLINF = 1e18 + 5;
-
-vpr ge[N];
-vi g[N];
-vi parent(N, 0);
-vi val(N);
-int n, q;
 
 class SegmentTree {
 	/**
@@ -180,6 +95,15 @@ class SegmentTree {
 		tree[v] = merge(tree[left(v)], tree[right(v)]);
 	}
 };
+
+const int N = 1e5 + 5;
+const ll INF = 1e9 + 5, LLINF = 1e18 + 5;
+
+vpr ge[N];
+vi g[N];
+vi parent(N, 0);
+vi val(N);
+int n, q;
 
 class HLD {
 	/**
@@ -316,12 +240,12 @@ int32_t main()
 
 	cin >> n >> q;
 	vi edges(n - 1, 0);
-	forl(i, 0, n - 1)
+	for (int i = 0; i < n - 1; ++i)
 	{
 		int u, v;
 		cin >> u >> v;
-		g[u].pb(v);
-		g[v].pb(u);
+		g[u].push_back(v);
+		g[v].push_back(u);
 	}
 
 	for (int i = 1; i <= n; ++i)
@@ -333,7 +257,7 @@ int32_t main()
 	H.initialise();
 	H.build(val);
 
-	forl(i, 0, q)
+	for (int i = 0; i < q; ++i)
 	{
 		int type, a, b;
 		cin >> type >> a >> b;
@@ -343,10 +267,6 @@ int32_t main()
 			cout << H.query(a, b) << "\n";
 		}
 	}
-	// forl(i, 1, n + 1) {
-	// 	ll vloo = H.query(i, i);
-	// 	debug(i, vloo);
-	// }
 
 	return 0;
 }
