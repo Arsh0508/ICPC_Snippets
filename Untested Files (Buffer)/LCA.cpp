@@ -68,4 +68,9 @@ struct LCA {
             swap(left, right);
         return query(1, 0, euler.size() - 1, left, right);
     }
+
+    int dist(int u, int v) {
+        int l = lca(u, v);
+        return height[u] + height[v] - 2 * height[l];
+    }
 };
