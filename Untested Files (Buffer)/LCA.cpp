@@ -1,18 +1,21 @@
-struct LCA {
-	/**
-	 * 	Constructor: LCA(graph, num_nodes, root) 
-	 * 	graph is an array of vectors.
-	 * 	root = 0 or 1 (usually)
-	 * 	Call the method LCA.lca(u, v) to find the LCA of u and v.
-	 * */
+#include <bits/stdc++.h>
+using namespace std;
 
+struct LCA {
+    /**
+     * 	Constructor: LCA(graph, num_nodes, root) 
+     * 	graph is an array of vectors.
+     * 	root = 0 or 1 (usually)
+     * 	Call the method LCA.lca(u, v) to find the LCA of u and v.
+     * */
+ 
     vector<int> height, euler, first, segtree;
     vector<bool> visited;
     int n;
-
-    LCA(vector<int> *adj, int tn, int root) {
-		n = tn;
-		int SZ = n + 5;
+ 
+    void init(vector<int> *adj, int tn, int root) {
+        n = tn;
+        int SZ = n + 5;
         height.resize(SZ);
         first.resize(SZ);
         euler.reserve(SZ * 2);
@@ -20,9 +23,22 @@ struct LCA {
         dfs(adj, root);
         int m = euler.size();
         segtree.resize(m * 4);
-        build(1, 0, m - 1);
+        build(1, 0, m - 1);		
     }
-
+ 
+    LCA(vvi adj, int tn, int root) {
+        n = tn;
+        vi g[n + 5];
+        forl(i, 0, tn + 1) {
+            g[i] = adj[i];
+        }
+        init(g, tn, root);
+    }
+ 
+    LCA(vector<int> *adj, int tn, int root) {
+        init(adj, tn, root);
+    }
+ 
     void dfs(vector<int> *adj, int node, int h = 0) {
         visited[node] = true;
         height[node] = h;
@@ -35,7 +51,7 @@ struct LCA {
             }
         }
     }
-
+ 
     void build(int node, int b, int e) {
         if (b == e) {
             segtree[node] = euler[b];
@@ -47,28 +63,28 @@ struct LCA {
             segtree[node] = (height[l] < height[r]) ? l : r;
         }
     }
-
+ 
     int query(int node, int b, int e, int L, int R) {
         if (b > R || e < L)
             return -1;
         if (b >= L && e <= R)
             return segtree[node];
         int mid = (b + e) >> 1;
-
+ 
         int left = query(node << 1, b, mid, L, R);
         int right = query(node << 1 | 1, mid + 1, e, L, R);
         if (left == -1) return right;
         if (right == -1) return left;
         return height[left] < height[right] ? left : right;
     }
-
+ 
     int lca(int u, int v) {
         int left = first[u], right = first[v];
         if (left > right)
             swap(left, right);
         return query(1, 0, euler.size() - 1, left, right);
     }
-
+ 
     int dist(int u, int v) {
         int l = lca(u, v);
         return height[u] + height[v] - 2 * height[l];
