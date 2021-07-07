@@ -44,11 +44,11 @@ class SegmentTree {
 	}
 	inline void propagate(int v, int tl, int tr) {
 		if (lazy[v]) {
-			tree[v] += lazy[v];
+			tree[v] = merge(tree[v],lazy[v]);
 		}
 		if (tl != tr) {
-			lazy[left(v)] += lazy[v];
-			lazy[right(v)] += lazy[v];
+			lazy[left(v)] = merge(lazy[left(v)],lazy[v]);
+			lazy[right(v)] = merge(lazy[right(v)],lazy[v]);
 		}
 		lazy[v] = 0;
 	}
@@ -134,13 +134,13 @@ class HLD {
 	void build(vi &val);
 	void initialise();
 	int query(int a, int b);
-	void update(int a, int b);
+	void update(int a, int b, int val);
 	inline int seg_query(int a, int b) {
 		return T.query(1, 0, n - 1, a, b);
 	}
-	inline void seg_update(int a, int b) {
+	inline void seg_update(int a, int b, int val) {
 		if (a <= b)
-			T.update(1, 0, n - 1, a, b, 1);
+			T.update(1, 0, n - 1, a, b, val);
 	}
 };
 
@@ -217,16 +217,16 @@ int HLD :: query(int a, int b) {
 	return res;
 }
 
-void HLD :: update(int a, int b) {
+void HLD :: update(int a, int b, int val) {
 	// Perform a segment tree updote on all nodes on the path from a to b.
 	for (; head[a] != head[b]; b = parent[head[b]]) {
 		if (depth[head[a]] > depth[head[b]])
 			swap(a, b);
-		seg_update(pos[head[b]], pos[b]);
+		seg_update(pos[head[b]], pos[b], val);
 	}
 	if (depth[a] > depth[b])
 		swap(a, b);
-	seg_update(pos[a], pos[b]);
+	seg_update(pos[a], pos[b], val);
 }
 
 int32_t main()
