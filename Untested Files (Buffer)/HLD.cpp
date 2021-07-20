@@ -43,8 +43,8 @@ class SegmentTree {
 		return lhs + rhs;
 	}
 	inline void propagate(int v, int tl, int tr) {
-		if (lazy[v]) {
-			tree[v] += lazy[v];
+		if (lazy[v] != IDENTITY) {
+			tree[v] += lazy[v] * (tr - tl + 1);
 		}
 		if (tl != tr) {
 			lazy[left(v)] += lazy[v];
